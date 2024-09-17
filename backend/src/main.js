@@ -5,8 +5,17 @@ const app = express()
 const port = 3002
 const db = require('../config/database')
 const profile = require('../models/profile')
+const recipes = require('../models/recipes')
 const cors = require('cors')
 const { where, Sequelize, Op } = require('sequelize')
+
+profile.hasMany(recipes, {
+    foreignKey: 'id',
+})
+
+recipes.belongsTo(profile, {
+    foreignKey: 'id',
+})
 
 app.listen(port, () => { 
     console.log(`Example app listening on port ${port}`) })
