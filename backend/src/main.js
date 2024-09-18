@@ -30,3 +30,75 @@ let corsOptions = { origin: '*', optionSuccessStatus: 200,
 
 app.use(cors(corsOptions))
 app.use(express.json())
+
+app.post('/createProfile', async(req, res) => {
+    try{
+        
+        const temp_profile = {
+            vorname: req.body.vorname,
+            nachname: req.body.nachname,
+            email: req.body.email,
+            passwort: await bcrypt.hash(req.body.passwort, 10),
+        }
+
+        await profile.create(temp_profile)
+
+        res.status(200).json({
+            success: true
+        })
+    } catch(err) {
+        res.status(500).json({
+            success: false,
+            error: err
+        })
+    }
+})
+
+app.get('/getProfiles', async(req, res) => {
+    try {
+        const result = await profile.findAll({
+            order: [
+                ["id", "ASC"]
+            ]
+        })
+
+        res.status(200).json({
+            success: true,
+            data: result
+        })
+    } catch(err) {
+        res.status(500).json({
+            success: false,
+            error: err
+        })
+    }
+})
+
+app.get('/checkProfileForLogin/:email', async(req, res) => {
+    try{
+        const result = await profile.findOne({
+            where: {
+                email: req.params.email,
+            }
+        })
+
+        const check = await bcrypt.compare(req.query["passwort"], result.dataValues.passwort)
+
+        if(check){
+            res.status(200).json({
+                success: true
+            })
+        } else {
+            res.status(404).json({
+                success: false,
+                error: "Not found!!"
+            })
+        }
+
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            error: err
+        })
+    }
+})
