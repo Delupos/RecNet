@@ -7,6 +7,8 @@ const db = require('../config/database')
 const profile = require('../models/profile')
 const recipes = require('../models/recipes')
 const cors = require('cors')
+const jwt = require('jsonwebtoken')
+const secTok = require('../testdaten.json')["secret-key"]["jwt"]
 const { where, Sequelize, Op } = require('sequelize')
 
 profile.hasMany(recipes, {
@@ -30,6 +32,40 @@ let corsOptions = { origin: '*', optionSuccessStatus: 200,
 
 app.use(cors(corsOptions))
 app.use(express.json())
+
+app.use(async(req, res, next) => {
+    try{
+        if(req.path.includes("checkProfileForLogin")){
+            return next()
+        }
+    
+        
+        const token = req.headers.authorization
+        if(!token){
+            return res.status(401).json({
+                success: false
+            })
+        }
+    
+        if(jwt.verify(token, secTok, {ignoreExpiration: false})){
+            return next()
+    
+        } else {
+            res.status(401).json({
+                success: false
+            })
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(401).json({
+            success: false
+        })
+    }
+})
+
+app.get("/", async(req, res, next) => {
+    res.status(200).send()
+})
 
 app.post('/createProfile', async(req, res) => {
     try{
@@ -85,8 +121,18 @@ app.get('/checkProfileForLogin/:email', async(req, res) => {
         const check = await bcrypt.compare(req.query["passwort"], result.dataValues.passwort)
 
         if(check){
+
+            const token = jwt.sign({
+                vorname: result.dataValues.vorname,
+                nachname: result.dataValues.nachname,
+                email: result.dataValues.email},
+                secTok, {
+                expiresIn: '1h'})
+                
+            
             res.status(200).json({
-                success: true
+                success: true,
+                data: token,
             })
         } else {
             res.status(404).json({

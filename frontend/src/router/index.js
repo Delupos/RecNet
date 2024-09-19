@@ -1,6 +1,7 @@
 import { route } from 'quasar/wrappers'
 import { createRouter, createMemoryHistory, createWebHistory, createWebHashHistory } from 'vue-router'
 import routes from './routes'
+import { api } from 'src/boot/axios'
 
 /*
  * If not building with SSR mode, you can
@@ -26,19 +27,26 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE)
   })
 
-  Router.beforeEach((to, from, next) => {
+  Router.beforeEach(async(to, from, next) => {
 
+    
     if (to.path != "/login") {
+      
+      try{
+        await api.get("/", {headers: {Authorization: localStorage.getItem("token")}})
+        
+      } catch (err) {
 
-      if (localStorage.getItem("login") == 1) {
-        return next()
+        console.log(err)
+
+        if ("AxiosError" == err.name && 401 == err.status) {
+          Router.push('/login')
+        } 
       }
-
-      Router.push("/login")
     }
 
-
     next()
+
   })
 
   return Router

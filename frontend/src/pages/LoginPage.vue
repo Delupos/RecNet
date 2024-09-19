@@ -113,17 +113,27 @@ export default defineComponent({
             } else {
                 
                 try{
-                    const result = await api.get(`/checkProfileForLogin/${login_email.value}?passwort=${login_passwort.value}`)
+                    const result = await api.get(`/checkProfileForLogin/${login_email.value}?passwort=${login_passwort.value}`, 
+                    {headers: {Authorization: localStorage.getItem("token")}})
+
                     $q.notify({
                         type: 'positive',
                         message: 'Login klappt!',
                         timeout: 2000
                     })
 
-                    localStorage.setItem("login", "1")
+                    const jwtToken = result.data.data
+
+                    localStorage.setItem("token", jwtToken)
+                    
                     router.push('../')
     
                 } catch (err) {
+                    
+                    if ("AxiosError" == err.name && 401 == err.status) {
+                        router.push('/login')
+                    }
+                    
                     $q.notify({
                         type: 'negative',
                         message: 'Fehler beim einloggen!',
@@ -133,7 +143,6 @@ export default defineComponent({
             }
 
         }
-
 
         return {
             create_vorname,
