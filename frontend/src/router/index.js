@@ -37,7 +37,7 @@ export default route(function (/* { store, ssrContext } */) {
         
       } catch (err) {
 
-        console.log(err)
+        // console.log(err)
 
         if ("AxiosError" == err.name && 401 == err.status) {
           Router.push('/login')

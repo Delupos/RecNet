@@ -85,9 +85,10 @@ export default defineComponent({
                     })
 
                 } catch(err) {
+                    console.log(err)
                     $q.notify({
                         type: 'negative',
-                        message: 'Unbekannter Fehler beim erstellen!',
+                        message: 'Unbekannter Fehler beim erstellen!' + err,
                         timeout: 2000
                     })
                 }

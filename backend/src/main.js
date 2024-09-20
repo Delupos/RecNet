@@ -35,7 +35,7 @@ app.use(express.json())
 
 app.use(async(req, res, next) => {
     try{
-        if(req.path.includes("checkProfileForLogin")){
+        if(req.path.includes("checkProfileForLogin") || req.path.includes("createProfile")){
             return next()
         }
     
@@ -56,9 +56,9 @@ app.use(async(req, res, next) => {
             })
         }
     } catch (err) {
-        console.log(err)
         res.status(401).json({
-            success: false
+            success: false,
+            error: err
         })
     }
 })
