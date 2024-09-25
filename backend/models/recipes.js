@@ -27,8 +27,10 @@ const recipes = db.define('recipes',
         type: sequelize.STRING,
         allowNull: false
     },
-    // Image ??? 
-    // foreign-Key to adressen id
+    bild: {
+        type: sequelize.BLOB,
+        allowNull: true
+    },
     id: {
         type: sequelize.INTEGER, 
         allowNull: false,

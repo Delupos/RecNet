@@ -78,7 +78,7 @@ export default defineComponent({
       } catch {
         return 
       }
-      console.log(token.value)
+      // console.log(token.value)
       if(token){
         fullLoginName.value = token.value["vorname"] + " " + token.value["nachname"]
       }

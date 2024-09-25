@@ -54,7 +54,6 @@ export default defineComponent({
         const login_passwort = ref('')
         const isPwd = ref(true)
         const createOrLogin = ref(true)
-        const createOrLoginBtn = ref("Login")
         const $q = useQuasar()
         const router = useRouter()
 
@@ -154,7 +153,6 @@ export default defineComponent({
             login_passwort,
             isPwd,
             createOrLogin,
-            createOrLoginBtn,
             createAccount,
             checkLogin
         }
@@ -187,11 +185,6 @@ div[v-if] {
     font-size: 16px;
     padding: 12px 15px;
     transition: border-color 0.2s;
-}
-
-.q-input input:focus {
-    border-color: var(--q-primary);
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
 }
 
 .q-input .q-icon {

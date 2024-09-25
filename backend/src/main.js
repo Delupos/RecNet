@@ -125,7 +125,8 @@ app.get('/checkProfileForLogin/:email', async(req, res) => {
             const token = jwt.sign({
                 vorname: result.dataValues.vorname,
                 nachname: result.dataValues.nachname,
-                email: result.dataValues.email},
+                email: result.dataValues.email,
+                id: result.dataValues.id},
                 secTok, {
                 expiresIn: '1h'})
                 
@@ -140,6 +141,110 @@ app.get('/checkProfileForLogin/:email', async(req, res) => {
                 error: "Not found!!"
             })
         }
+
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            error: err
+        })
+    }
+})
+
+app.get('/getAllRecipes', async(req, res) => {
+    try {
+        const result = await recipes.findAll({
+            order: [
+                ["recId", "ASC"]
+            ]
+        })
+
+        res.status(200).json({
+            success: true,
+            data: result,
+        })
+        
+    } catch(err) {
+        res.status(500).json({
+            success: false,
+            error: err
+        })
+    }
+})
+
+app.post('/createRecipe', async(req, res) => {
+    try {
+
+        const temp_recipe = {
+            titel: req.body.titel,
+            zutaten: req.body.zutaten,
+            zubereitung: req.body.zubereitung,
+            preis: req.body.preis,
+            dauer: req.body.dauer,
+            id: req.body.id
+        }
+
+        await recipes.create(temp_recipe)
+
+        res.status(200).json({
+            succes: true
+        })
+
+    } catch(err) {
+        res.status(500).json({
+            success: false,
+            error: err
+        })
+    }
+})
+
+app.post('/getFilteredRecipes', async(req, res) => {
+    try {
+
+        const result = await recipes.findAndCountAll({
+            order: [
+                ["id", "DESC"]
+            ],
+            where: {
+                [Op.or] : [
+                    {
+                        titel:
+                        {
+                            [Op.substring]: req.body.info
+                        }
+                    },
+                    {
+                        zutaten:
+                        {
+                            [Op.substring]: req.body.info
+                        }
+                    },
+                    {
+                        zubereitung:
+                        {
+                            [Op.substring]: req.body.info
+                        }
+                    },
+                    {
+                        preis:
+                        {
+                            [Op.substring]: req.body.info
+                        }
+                    },
+                    {
+                        dauer:
+                        {
+                            [Op.substring]: req.body.info
+                        }
+                    }
+                ]
+            },
+        })
+
+        res.status(200).json({
+            success: true, 
+            data: result.rows,
+            count: result.count
+        }) 
 
     } catch (err) {
         res.status(500).json({
