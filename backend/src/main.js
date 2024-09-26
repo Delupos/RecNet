@@ -201,6 +201,12 @@ app.post('/getFilteredRecipes', async(req, res) => {
     try {
 
         const result = await recipes.findAndCountAll({
+            include: [{
+                model: profile,
+                on: {
+                    col1: Sequelize.where(Sequelize.col('recipes.id'), '=', Sequelize.col('profile.id'))
+                }
+            }],
             order: [
                 ["id", "DESC"]
             ],
@@ -238,6 +244,8 @@ app.post('/getFilteredRecipes', async(req, res) => {
                     }
                 ]
             },
+            limit: req.query.limit,
+            offset: req.query.offset
         })
 
         res.status(200).json({

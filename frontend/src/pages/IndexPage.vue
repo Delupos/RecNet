@@ -7,28 +7,53 @@
     </div>
 
     <div style="margin: 0; padding: 0; min-width: 1000px; max-width: 1000px; margin-top: 20px;">
+      <div class="flex flex-center">
+        <q-pagination
+        v-model="currentPage"
+        :max="pageAmount"
+        :max-pages="paginationMax"
+        :boundary-numbers="false"
+        @update:model-value="calculateOffset()"
+        style="margin-top: 20px;"
+        />
+      </div>
       <div v-for="recipe in recipes" class="RecContent">
         <div style="margin-left: 15px;">
-          <h2>{{ recipe["titel"] }}</h2>
+          <h2 v-if="recipe['titel'].length < 20">{{ recipe["titel"] }}</h2>
+          <h4 v-else>{{ recipe["titel"] }}</h4>
           <p>Zutaten: {{ recipe["zutaten"] }}</p>
           <p>Dauer: {{ recipe["dauer"] }} min</p>
           <p>Preis: ca. {{ recipe["preis"] }} €</p>
+          <p>Erstellt von: {{ recipe["profile"]["vorname"] }} {{ recipe["profile"]["nachname"].charAt(0) }}.</p>
         </div>
         
         <q-img
-          src="https://cdn.quasar.dev/img/parallax2.jpg"
-          spinner-color="white"
-          style="height: 200px; max-width: 210px; margin-top: 45px; margin-right: 70px;"
+        src="https://cdn.quasar.dev/img/parallax2.jpg"
+        spinner-color="white"
+        style="height: 200px; max-width: 210px; margin-top: 45px; margin-right: 70px;"
         ></q-img>
+        
+      </div>
+
+      <div v-if="recipes.length == 0" class="RecContent">
+        <div style="margin-left: 15px; text-align: center" class="flex flex-center">
+          <h2>Es wurde leider kein Rezept gefunden! :(</h2>
+        </div>
       </div>
     </div>
 
+
     <!-- Festes div für den Rezept erstellen Button -->
     <div style="position: fixed; top: 50px; right: 80px; min-width: 150px; max-width: 250px; padding: 0; margin: 0; z-index: 100;">
-      <q-btn class="" color="primary" label="Rezept erstellen" style="margin-top: 50px;" @click="window_CreateRecipe = true"/>
-      <q-input class="" label="Suchen..." @keydown.enter.prevent="getFiltered()" @update:model-value="getFiltered()" v-model="searchInput.info" style="margin-top: 30px;"> <template v-slot:append>
-                    <q-icon @click="getFiltered()" name="search"></q-icon>
-                </template></q-input>
+
+      <q-btn class="rightContents" color="primary" label="Rezept erstellen" @click="window_CreateRecipe = true"/>
+
+      <q-input class="rightContents" label="Suchen..." @keydown.enter.prevent="getFiltered()" @update:model-value="getFiltered()" v-model="searchInput.info" style="margin-top: 30px;"> <template v-slot:append>
+                      <q-icon @click="getFiltered()" name="search"></q-icon>
+        </template>
+      </q-input>
+
+      <q-select class="rightContents" v-model="amountPerPage" :options="pageAmountOptions" label="Anzahl Rezepte pro Seite" @update:model-value="calculateMaxAmountPage(), calculateOffset()"/>
     </div>
 
     <!-- Dialog für das Erstellen von Rezepten -->
@@ -85,58 +110,100 @@ export default defineComponent({
       zubereitung: "",
       preis: "",
       dauer: "",
-      id: "1"
+      id: ""
     })
     const window_CreateRecipe = ref(false)
     const searchInput = ref({info: ""})
+    const amountPerPage = ref(4)
+    const offset = ref(0)
+    const currentPage = ref(1)
+    const paginationMax = ref(5)
+    const dbcounter = ref(0)
+    const pageAmount = ref(1)
+    const pageAmountOptions = [4, 6, 8, 10]
     
     onMounted(() => {
       name.value = token["vorname"]
       cur_id.value = token["id"]
-      getRecipes()
+      getFiltered()
+
     })
 
     watch(() => router.currentRoute.value.fullPath, () => {
       location.reload();
     })
 
-    async function getRecipes() {
-      const result = (await api.get('/getAllRecipes', {headers: {Authorization: localStorage.getItem("token")}})).data.data
-      recipes.value = result
-    }
+    // async function getRecipes() {
+    //   const result = (await api.get('/getAllRecipes', {headers: {Authorization: localStorage.getItem("token")}})).data.data
+    //   recipes.value = result
+    // }
 
     async function createRecipe() {
       try {
-        await api.post('/createRecipe', create_recipe.value, {headers: {Authorization: localStorage.getItem("token")}})
-        getRecipes()
-        create_recipe = {
-          titel: "",
-          zutaten: "",
-          zubereitung: "",
-          preis: "",
-          dauer: "",
-          id: ""
+        create_recipe.value.id = token["id"]
+        if(Object.values(create_recipe.value).every(field => field !== '')){
+          await api.post('/createRecipe', create_recipe.value, {headers: {Authorization: localStorage.getItem("token")}})
+          await getFiltered()
+          calculateOffset()
+          create_recipe.value = {
+            titel: "",
+            zutaten: "",
+            zubereitung: "",
+            preis: "",
+            dauer: "",
+            id: ""
+          }
+  
+          $q.notify({
+            type: 'positive',
+            message: 'Ihr Rezept wurde erfolgreich erstellt!',
+            timeout: 2000,
+            color: 'primary'
+          })
+
+        } else {
+          $q.notify({
+            type: 'negativ',
+            message: 'Alle Felder müssen ausgefüllt sein!',
+            timeout: 2000,
+          })
         }
-
-        $q.notify({
-          type: 'positive',
-          message: 'Ihr Rezept wurde erfolgreich erstellt!',
-          timeout: 2000
-        })
-
       } catch (err) {
+        console.log(err)
         $q.notify({
           type: 'negativ',
           message: 'Ihr Rezept konnte nicht erstellt werden!',
-          timeout: 2000
+          timeout: 2000,
+          color: 'red'
         })
       }
     }
 
+    async function calculateOffset() {
+      offset.value = (currentPage.value - 1) * amountPerPage.value
+      await getFiltered()
+    }
+
+    function calculateMaxAmountPage(){
+      pageAmount.value = Math.ceil(dbcounter.value / amountPerPage.value)
+    }
+
+    function checkForEmptyValue(){
+      return recipes.value == 0
+    }
+
+    function sortById(arr) {
+      return arr.sort((a, b) => a.id - b.id);
+    }
+
     async function getFiltered() {
-      const temp = (await api.post('getFilteredRecipes', searchInput.value, {headers: {Authorization: localStorage.getItem("token")}})).data
-      console.log(temp)
-      recipes.value = temp.data
+      const temp = (await api.post(`getFilteredRecipes/?limit=${amountPerPage.value}&offset=${offset.value}`, searchInput.value, {headers: {Authorization: localStorage.getItem("token")}})).data
+      recipes.value = sortById(temp.data)
+      dbcounter.value = temp.count
+      calculateMaxAmountPage()
+      if(checkForEmptyValue()) {
+        pageAmount.value = 1
+      }
     }
 
     return {
@@ -146,12 +213,22 @@ export default defineComponent({
       create_recipe,
       window_CreateRecipe,
       searchInput,
+      currentPage,
+      dbcounter,
+      pageAmount,
+      offset,
+      amountPerPage,
+      paginationMax,
+      pageAmountOptions,
       createRecipe,
-      getFiltered
+      getFiltered,
+      calculateOffset,
+      calculateMaxAmountPage
     }
   }
 });
 </script>
+
 
 <style>
 
@@ -159,8 +236,8 @@ export default defineComponent({
   display: flex; 
   justify-content: space-between; 
   margin: 30px; 
-  min-height: 300px;
-  max-height: 300px;
+  min-height: 320px;
+  max-height: 320px;
   border: 3px solid white;
   border-radius: 8px;
   background-color: rgb(36, 35, 35);
@@ -171,28 +248,35 @@ export default defineComponent({
 }
 
 .loginPageBtn {
-    display: block;
-    width: 100%;
-    margin-bottom: 15px;
-    font-size: 16px;
-    padding: 12px;
-    border-radius: 10px;
-    transition: background-color 0.3s, transform 0.2s;
+  display: block;
+  width: 100%;
+  margin-bottom: 15px;
+  font-size: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  transition: background-color 0.3s, transform 0.2s;
 }
 
 .loginPageBtn[color="primary"] {
-    background-color: var(--q-primary);
-    color: white;
-    border: none;
+  background-color: var(--q-primary);
+  color: white;
+  border: none;
 }
 
 .loginPageBtn[color="primary"]:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
+  background-color: #0056b3;
+  transform: translateY(-2px);
 }
 
 .loginPageBtn[color="primary"]:active {
-    transform: translateY(0);
+  transform: translateY(0);
+}
+
+.rightContents {
+  min-width: 200px;
+  max-width: 200px;
+  margin-top: 50px;;
+  margin-right: 180px;
 }
 
 </style>
