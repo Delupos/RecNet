@@ -6,7 +6,7 @@
       <h3>Hallo {{ name }}</h3>
     </div>
 
-    <div style="margin: 0; padding: 0; min-width: 1000px; max-width: 1000px; margin-top: 20px;">
+    <div style="margin: 0; padding: 0; min-width: 110vh; max-width: 110vh; margin-top: 20px;" >
       <div class="flex flex-center">
         <q-pagination
         v-model="currentPage"
@@ -17,20 +17,24 @@
         style="margin-top: 20px;"
         />
       </div>
-      <div v-for="recipe in recipes" class="RecContent">
-        <div style="margin-left: 15px;">
+
+      <div v-for="recipe in recipes" class="RecContent" @click="goToRecipePage(recipe['id'])">
+        <div style="margin-left: 50px; margin-top: -15px;">
+
           <h2 v-if="recipe['titel'].length < 20">{{ recipe["titel"] }}</h2>
           <h4 v-else>{{ recipe["titel"] }}</h4>
-          <p>Zutaten: {{ recipe["zutaten"] }}</p>
+
+          <p v-if="recipe['zutaten'].length < 40">Zutaten: {{ recipe["zutaten"] }}</p>
+          <p v-else>Zutaten: {{ recipe["zutaten"].slice(0,40) }}...</p>
           <p>Dauer: {{ recipe["dauer"] }} min</p>
           <p>Preis: ca. {{ recipe["preis"] }} €</p>
           <p>Erstellt von: {{ recipe["profile"]["vorname"] }} {{ recipe["profile"]["nachname"].charAt(0) }}.</p>
         </div>
         
         <q-img
-        src="https://cdn.quasar.dev/img/parallax2.jpg"
-        spinner-color="white"
-        style="height: 200px; max-width: 210px; margin-top: 45px; margin-right: 70px;"
+          src="https://cdn.quasar.dev/img/parallax2.jpg"
+          spinner-color="white"
+          style="height: 200px; max-width: 210px; margin-top: 45px; margin-right: 70px;"
         ></q-img>
         
       </div>
@@ -114,7 +118,7 @@ export default defineComponent({
     })
     const window_CreateRecipe = ref(false)
     const searchInput = ref({info: ""})
-    const amountPerPage = ref(4)
+    const amountPerPage = ref(10)
     const offset = ref(0)
     const currentPage = ref(1)
     const paginationMax = ref(5)
@@ -126,7 +130,6 @@ export default defineComponent({
       name.value = token["vorname"]
       cur_id.value = token["id"]
       getFiltered()
-
     })
 
     watch(() => router.currentRoute.value.fullPath, () => {
@@ -193,7 +196,13 @@ export default defineComponent({
     }
 
     function sortById(arr) {
-      return arr.sort((a, b) => a.id - b.id);
+      return arr.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt)
+      });
+    }
+
+    function goToRecipePage(id) {
+      router.push(`/recipe/${id}`)
     }
 
     async function getFiltered() {
@@ -223,7 +232,8 @@ export default defineComponent({
       createRecipe,
       getFiltered,
       calculateOffset,
-      calculateMaxAmountPage
+      calculateMaxAmountPage,
+      goToRecipePage
     }
   }
 });
@@ -240,7 +250,7 @@ export default defineComponent({
   max-height: 320px;
   border: 3px solid white;
   border-radius: 8px;
-  background-color: rgb(36, 35, 35);
+  background-color: rgb(27, 27, 27);
 }
 
 .RecContent:hover{

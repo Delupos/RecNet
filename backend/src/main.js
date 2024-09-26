@@ -261,3 +261,25 @@ app.post('/getFilteredRecipes', async(req, res) => {
         })
     }
 })
+
+app.get('/getRecipeById/:id', async(req, res) => {
+    try{
+
+        const result = await recipes.findOne({
+            where: {
+                "id": req.params.id,
+            }
+        })
+
+        res.status(200).json({
+            success: true,
+            data: result
+        })
+
+    } catch(err) {
+        res.status(500).json({
+            succces: false,
+            error: err
+        })
+    }
+})
