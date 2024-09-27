@@ -18,7 +18,7 @@
         />
       </div>
 
-      <div v-for="recipe in recipes" class="RecContent" @click="goToRecipePage(recipe['id'])">
+      <div v-for="recipe in recipes" class="RecContent" @click="goToRecipePage(recipe['recId'])">
         <div style="margin-left: 50px; margin-top: -15px;">
 
           <h2 v-if="recipe['titel'].length < 20">{{ recipe["titel"] }}</h2>
@@ -28,7 +28,8 @@
           <p v-else>Zutaten: {{ recipe["zutaten"].slice(0,40) }}...</p>
           <p>Dauer: {{ recipe["dauer"] }} min</p>
           <p>Preis: ca. {{ recipe["preis"] }} €</p>
-          <p>Erstellt von: {{ recipe["profile"]["vorname"] }} {{ recipe["profile"]["nachname"].charAt(0) }}.</p>
+          <p v-if="recipe['profile']['vorname'] == name">Erstellt: Dein Rezept</p>
+          <p v-else>Erstellt: {{ recipe["profile"]["vorname"] }} {{ recipe["profile"]["nachname"].charAt(0) }}.</p>
         </div>
         
         <q-img
@@ -41,7 +42,7 @@
 
       <div v-if="recipes.length == 0" class="RecContent">
         <div style="margin-left: 15px; text-align: center" class="flex flex-center">
-          <h2>Es wurde leider kein Rezept gefunden! :(</h2>
+          <h2>Es wurde leider kein Rezept gefunden :(</h2>
         </div>
       </div>
     </div>
@@ -53,7 +54,7 @@
       <q-btn class="rightContents" color="primary" label="Rezept erstellen" @click="window_CreateRecipe = true"/>
 
       <q-input class="rightContents" label="Suchen..." @keydown.enter.prevent="getFiltered()" @update:model-value="getFiltered()" v-model="searchInput.info" style="margin-top: 30px;"> <template v-slot:append>
-                      <q-icon @click="getFiltered()" name="search"></q-icon>
+                      <q-icon @click="getFiltered()" name="search" style="cursor: pointer"></q-icon>
         </template>
       </q-input>
 
@@ -62,7 +63,7 @@
 
     <!-- Dialog für das Erstellen von Rezepten -->
     <q-dialog v-model="window_CreateRecipe" persistent transition-show="scale" transition-hide="scale">
-      <q-card style="min-width: 400px; max-height: 500px;">
+      <q-card style="min-width: 400px; max-height: 600px;">
         <q-card-section style="min-height: 100px; max-height: 100px; margin-top: -30px; margin-bottom: 20px;">
           <h6>Erstelle ein Rezept</h6>
         </q-card-section>
@@ -70,10 +71,10 @@
           <q-input dense v-model="create_recipe.titel" autofocus label='Titel'></q-input>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <q-input dense v-model="create_recipe.zutaten" autofocus label="Zutaten"></q-input>
+          <q-input dense v-model="create_recipe.zutaten" autofocus hint="Geben Sie die Zutaten bitte getrennt mit Komma an und die Menge in Klammern hinter dieser Zutat" label="Zutaten"></q-input>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <q-input dense v-model="create_recipe.zubereitung" autofocus label='Zubereitung'></q-input>
+          <q-input dense v-model="create_recipe.zubereitung" autofocus hint="Sie können einen einfachen Fließtext schreiben" label='Zubereitung'></q-input>
         </q-card-section>
         <q-card-section class="q-pt-none">
           <q-input dense v-model="create_recipe.preis" autofocus mask="##" hint="Nur die Euros (##)" label='Preis'></q-input>
@@ -203,6 +204,7 @@ export default defineComponent({
 
     function goToRecipePage(id) {
       router.push(`/recipe/${id}`)
+      console.log(id)
     }
 
     async function getFiltered() {

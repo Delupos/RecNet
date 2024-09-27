@@ -118,7 +118,7 @@ export default defineComponent({
 
                     $q.notify({
                         type: 'positive',
-                        message: 'Login klappt!',
+                        message: 'Login war erfolgreich!',
                         timeout: 2000
                     })
 

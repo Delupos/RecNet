@@ -267,7 +267,7 @@ app.get('/getRecipeById/:id', async(req, res) => {
 
         const result = await recipes.findOne({
             where: {
-                "id": req.params.id,
+                "recId": req.params.id,
             }
         })
 

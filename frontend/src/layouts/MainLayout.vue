@@ -3,7 +3,7 @@
     <q-header elevated>
       <q-toolbar>
 
-        <q-toolbar-title>
+        <q-toolbar-title @click="goToIndexPage()" id="toolbartitle">
           {{ title }}
         </q-toolbar-title>
 
@@ -89,13 +89,28 @@ export default defineComponent({
       router.push('../login')
     }
 
+    function goToIndexPage(){
+      router.push('../')
+    }
+
     return {
       title,
       version,
       verOrBtn,
       fullLoginName,
-      logout
+      logout,
+      goToIndexPage
     }
   }
 })
 </script>
+
+<style>
+
+#toolbartitle {
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+}
+
+</style>
