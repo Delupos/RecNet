@@ -6,15 +6,16 @@
       <h3>Hallo {{ name }}</h3>
     </div>
 
+    <!-- Content-Seite in der Mitte mit den Rezepten -->
     <div style="margin: 0; padding: 0; min-width: 110vh; max-width: 110vh; margin-top: 20px;" >
       <div class="flex flex-center">
         <q-pagination
-        v-model="currentPage"
-        :max="pageAmount"
-        :max-pages="paginationMax"
-        :boundary-numbers="false"
-        @update:model-value="calculateOffset()"
-        style="margin-top: 20px;"
+          v-model="currentPage"
+          :max="pageAmount"
+          :max-pages="paginationMax"
+          :boundary-numbers="false"
+          @update:model-value="calculateOffset()"
+          style="margin-top: 20px;"
         />
       </div>
 
@@ -63,7 +64,7 @@
 
     <!-- Dialog für das Erstellen von Rezepten -->
     <q-dialog v-model="window_CreateRecipe" persistent transition-show="scale" transition-hide="scale">
-      <q-card style="min-width: 400px; max-height: 600px;">
+      <q-card style="min-width: 400px; max-height: 1000px;">
         <q-card-section style="min-height: 100px; max-height: 100px; margin-top: -30px; margin-bottom: 20px;">
           <h6>Erstelle ein Rezept</h6>
         </q-card-section>
@@ -81,6 +82,23 @@
         </q-card-section>
         <q-card-section class="q-pt-none">
           <q-input dense v-model="create_recipe.dauer" autofocus mask="##" hint="Nur die Zeit (##)" label='Dauer'></q-input>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-file
+            v-model="img"
+            outlined
+            accept=".jpg, image/*"
+            @update:model-value="handleIMG(img)"
+            style="max-width: 375px; min-width: 375px;"
+            label="Laden Sie ein Bild hoch:"
+          />
+        <q-card-section class="q-pt-none" v-if="appImage">
+          <q-img
+            v-if="showImg"
+            :src="showImg"
+            style="margin-top: 10px;"
+          />
+        </q-card-section>
         </q-card-section>
         <q-card-actions style="display: flex; justify-content: space-between;">
           <q-btn flat label='Schließen' v-close-popup ></q-btn>
@@ -115,8 +133,12 @@ export default defineComponent({
       zubereitung: "",
       preis: "",
       dauer: "",
-      id: ""
+      id: "",
+      bild: ""
     })
+    const appImage = ref(null)
+    const img = ref(null)
+    const showImg = ref(null)
     const window_CreateRecipe = ref(false)
     const searchInput = ref({info: ""})
     const amountPerPage = ref(10)
@@ -145,8 +167,10 @@ export default defineComponent({
     async function createRecipe() {
       try {
         create_recipe.value.id = token["id"]
+        console.log(create_recipe.value)
         if(Object.values(create_recipe.value).every(field => field !== '')){
-          await api.post('/createRecipe', create_recipe.value, {headers: {Authorization: localStorage.getItem("token")}})
+          // await api.post('/createRecipe', create_recipe.value, {headers: {Authorization: localStorage.getItem("token")}})
+          console.log(create_recipe.value.bild)
           await getFiltered()
           calculateOffset()
           create_recipe.value = {
@@ -155,7 +179,8 @@ export default defineComponent({
             zubereitung: "",
             preis: "",
             dauer: "",
-            id: ""
+            id: "",
+            bild: ""
           }
   
           $q.notify({
@@ -202,9 +227,27 @@ export default defineComponent({
       });
     }
 
+    function handleIMG(fileData) {
+      const reader = new FileReader()
+      reader.onload = () => {
+        const byteArray = new Uint8Array(reader.result)
+        arrayData(byteArray)
+      }
+      reader.readAsArrayBuffer(fileData)
+    }
+
+    function arrayData(arr) {
+      let chars = ""
+      for(const byte of arr){
+        chars += String.fromCharCode(byte)
+      }
+      appImage.value = btoa(chars)
+      showImg.value = "data:image/png;base64," + appImage.value
+    }
+
     function goToRecipePage(id) {
       router.push(`/recipe/${id}`)
-      console.log(id)
+      // console.log(id)
     }
 
     async function getFiltered() {
@@ -231,11 +274,15 @@ export default defineComponent({
       amountPerPage,
       paginationMax,
       pageAmountOptions,
+      appImage,
+      img,
+      showImg,
       createRecipe,
       getFiltered,
       calculateOffset,
       calculateMaxAmountPage,
-      goToRecipePage
+      goToRecipePage,
+      handleIMG
     }
   }
 });

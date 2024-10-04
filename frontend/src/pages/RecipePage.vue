@@ -24,7 +24,7 @@
             
             <div class="preparation">
                 <h3>Zubereitung:</h3>
-                <h5>{{ preparation }}</h5>
+                <a>{{ preparation }}</a>
             </div>
 
         </div>

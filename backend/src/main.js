@@ -180,7 +180,8 @@ app.post('/createRecipe', async(req, res) => {
             zubereitung: req.body.zubereitung,
             preis: req.body.preis,
             dauer: req.body.dauer,
-            id: req.body.id
+            id: req.body.id,
+            bild: req.body.bild
         }
 
         await recipes.create(temp_recipe)
