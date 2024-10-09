@@ -77,11 +77,23 @@ app.post('/createProfile', async(req, res) => {
             passwort: await bcrypt.hash(req.body.passwort, 10),
         }
 
-        await profile.create(temp_profile)
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-        res.status(200).json({
-            success: true
-        })
+        if(emailRegex.test(temp_profile.email)){
+            
+            await profile.create(temp_profile)
+    
+            res.status(200).json({
+                success: true
+            })
+
+        } else {
+            res.status(400).json({
+                success: false,
+                error: "Invalid E-Mail"
+            })
+        }
+
     } catch(err) {
         res.status(500).json({
             success: false,

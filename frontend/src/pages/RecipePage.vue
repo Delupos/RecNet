@@ -11,7 +11,7 @@
         <div class="content"> 
             <div class="ingredients">
                 <h3>Zutaten:</h3>
-                <h5 v-for="ingredient in ingredients">-> {{ ingredient }}</h5>
+                <h5 v-for="ingredient in ingredients">- {{ ingredient }}</h5>
             </div>
             
             <div class="image">

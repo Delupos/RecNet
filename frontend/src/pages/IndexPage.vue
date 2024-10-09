@@ -78,10 +78,10 @@
           <q-input dense v-model="create_recipe.zubereitung" autofocus hint="Sie können einen einfachen Fließtext schreiben" label='Zubereitung'></q-input>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <q-input dense v-model="create_recipe.preis" autofocus mask="##" hint="Nur die Euros (##)" label='Preis'></q-input>
+          <q-input dense v-model="create_recipe.preis" autofocus mask="##.##" hint="Bsp.: 09.99€" label='Preis'></q-input>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <q-input dense v-model="create_recipe.dauer" autofocus mask="##" hint="Nur die Zeit (##)" label='Dauer'></q-input>
+          <q-input dense v-model="create_recipe.dauer" autofocus mask="##.##" hint="MM.SS" label='Dauer'></q-input>
         </q-card-section>
         <q-card-section class="q-pt-none">
           <q-file
@@ -152,7 +152,17 @@ export default defineComponent({
     onMounted(() => {
       name.value = token["vorname"]
       cur_id.value = token["id"]
-      getFiltered()
+      try{
+        getFiltered()
+        
+      } catch(err) {
+        $q.notify({
+          type: 'negative',
+          message: 'Es gibt Probleme mit dem Backend!',
+          timeout: 2000,
+          color: 'positive'
+        })
+      }
     })
 
     watch(() => router.currentRoute.value.fullPath, () => {
@@ -304,31 +314,6 @@ export default defineComponent({
 
 .RecContent:hover{
   cursor: pointer;
-}
-
-.loginPageBtn {
-  display: block;
-  width: 100%;
-  margin-bottom: 15px;
-  font-size: 16px;
-  padding: 12px;
-  border-radius: 10px;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-.loginPageBtn[color="primary"] {
-  background-color: var(--q-primary);
-  color: white;
-  border: none;
-}
-
-.loginPageBtn[color="primary"]:hover {
-  background-color: #0056b3;
-  transform: translateY(-2px);
-}
-
-.loginPageBtn[color="primary"]:active {
-  transform: translateY(0);
 }
 
 .rightContents {

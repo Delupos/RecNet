@@ -12,26 +12,27 @@
                     />
                 </template>
             </q-input>
-            <q-btn class="loginPageBtn" color="primary" @click="checkLogin()" label="Login" />
-            <q-btn class="loginPageBtn" color="primary" @click="createOrLogin = !createOrLogin" label="Konto erstellen?"/>
+            <q-btn no-caps class="loginPageBtn" color="primary" @click="checkLogin()" label="Login" />
+            <q-btn no-caps class="loginPageBtn" color="primary" @click="createOrLogin = !createOrLogin" label="Konto erstellen?"/>
         </div>
         
         <div v-else>
             <h5 style="margin-bottom: 10px;">Create Account</h5>
-            <q-input filled v-model="create_vorname" label="Vorname"  />
-            <q-input filled v-model="create_nachname" label="Nachname"  />
-            <q-input filled v-model="create_email" label="E-Mail"  />
-            <q-input filled v-model="create_passwort" label="Passwort"  :type="isPwd ? 'password' : 'text'">
+            <q-input filled v-model="create_vorname" label="Vorname"/>
+            <q-input filled v-model="create_nachname" label="Nachname"/>
+            <q-input filled v-model="create_email" label="E-Mail"/>
+            <q-input filled v-model="create_passwort" label="Passwort" :type="isPwd ? 'password' : 'text'">
                 <template v-slot:append>
                     <q-icon
                         :name="isPwd ? 'visibility_off' : 'visibility'"
+
                         class="cursor-pointer"
                         @click="isPwd = !isPwd"
                     />
                 </template>
             </q-input>
-            <q-btn class="loginPageBtn" color="primary" label="Account erstellen" @click="createAccount()"/>
-            <q-btn class="loginPageBtn" color="primary" @click="createOrLogin = !createOrLogin" label="Haben Sie bereits ein Konto?"/>
+            <q-btn no-caps class="loginPageBtn" color="primary" label="Account erstellen" @click="createAccount()"/>
+            <q-btn no-caps class="loginPageBtn" color="primary" @click="createOrLogin = !createOrLogin" label="Haben Sie bereits ein Konto?"/>
         </div>
     </q-page>
 </template>
@@ -61,36 +62,54 @@ export default defineComponent({
             const fields = [create_vorname.value, create_nachname.value, create_email.value, create_passwort.value]
 
             if (fields.every(field => field !== '')) {
-                
-                const temp = {
-                    vorname: create_vorname.value,
-                    nachname: create_nachname.value,
-                    email: create_email.value,
-                    passwort: create_passwort.value
-                }
 
-                try {
-                    await api.post('/createProfile' , temp)
+                if (create_vorname.value != create_nachname.value && create_nachname.value.length <= 15 && create_vorname.value.length <= 15){
 
+                    
+                    const temp = {
+                        vorname: create_vorname.value,
+                        nachname: create_nachname.value,
+                        email: create_email.value,
+                        passwort: create_passwort.value
+                    }
+                    
+                    try {
+                        await api.post('/createProfile' , temp)
+                        
+                        
                     create_vorname.value = ''
                     create_nachname.value = ''
                     create_email.value = ''
                     create_passwort.value = ''
-
+                    
                     $q.notify({
                         type: 'positive',
                         message: 'Ihr Account wurde erfolgreich erstellt!',
                         timeout: 2000
                     })
 
-                } catch(err) {
-                    console.log(err)
-                    $q.notify({
+                    } catch(err) {
+                        
+                        var message = "" 
+                        if (err.status == 400) {
+                            message = "Invalid E-Mail"
+                        } else {
+                            message = "Unbekannter Fehler! " + err.name
+                        }
+                        $q.notify({
+                            type: 'negative',
+                            message: message,
+                            timeout: 2000
+                        })
+                    }
+
+                $q.notify({
                         type: 'negative',
-                        message: 'Unbekannter Fehler beim erstellen!' + err,
+                        message: 'Vor- und Nachname dürfen nicht identisch sein',
                         timeout: 2000
                     })
-                }
+                } 
+
             } else {
                 $q.notify({
                     type: 'negative',
@@ -131,14 +150,16 @@ export default defineComponent({
                 } catch (err) {
                     
                     if ("AxiosError" == err.name && 401 == err.status) {
+                        
                         router.push('/login')
+                        
                     }
-                    
                     $q.notify({
                         type: 'negative',
                         message: 'Fehler beim einloggen!',
                         timeout: 2000
                     })
+                    
                 }
             }
 
