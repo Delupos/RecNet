@@ -7,32 +7,32 @@
       <!-- Types -->
       <div style="display: flex; flex-direction: row; justify-content: space-between; width: 50%; ">
         <div class="text-center" style="width: 65px;">
-          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: grey; margin-bottom: 8px;">
+          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px;">
           </div>
           <p>Sea Food</p>
         </div>
         <div class="text-center" style="width: 65px;">
-          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: grey; margin-bottom: 8px;">
+          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px;">
           </div>
           <p>Fast Food</p>
         </div>
         <div class="text-center" style="width: 65px;">
-          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: grey; margin-bottom: 8px;">
+          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px;">
           </div>
           <p>Asian</p>
         </div>
         <div class="text-center" style="width: 65px;">
-          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: grey; margin-bottom: 8px;">
+          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px;">
           </div>
           <p>Vegan</p>
         </div>
         <div class="text-center" style="width: 65px;">
-          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: grey; margin-bottom: 8px;">
+          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px;">
           </div>
           <p>Italian</p>
         </div>
         <div class="text-center" style="width: 65px;">
-          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: grey; margin-bottom: 8px;">
+          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px;">
           </div>
           <p>Arabic</p>
         </div>
@@ -64,7 +64,7 @@
           <div style="display: flex; flex-wrap: wrap; gap: 12px; width: 100%; margin-top: 16px;">
             <!-- Cards -->
             <div v-for="recipe in recipes" style="width: 49%;">
-              <div style="height: 100%; width: 100%; border-radius: 20px; background-color: grey;">
+              <div style="height: 100%; width: 100%; border-radius: 20px; background-color: #D9D9D9;">
                 <q-img src="../../public/gordon_ramsay.jpeg" spinner-color="white"
                   style="object-fit: cover; border-radius: 20px; height: 180px;"></q-img>
 
