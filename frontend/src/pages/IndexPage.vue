@@ -1,12 +1,113 @@
 <template>
-  <q-page style="display: flex; justify-content: space-evenly; margin: 0; padding: 0;">
-    
-    <!-- Festes div mit h3 Überschrift -->
+  <q-page style="padding-left: 172px; padding-right: 172px; display: flex; flex-direction: column; gap: 40px; overflow-y: hidden;">
+
+    <!-- Type of Recipe Btns -->
+    <div class="w-full q-flex q-flex-row" style="padding-top: 75px;">
+
+      <!-- Types -->
+      <div style="display: flex; flex-direction: row; justify-content: space-between; width: 50%; ">
+        <div class="text-center" style="width: 65px;">
+          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: grey; margin-bottom: 8px;">
+          </div>
+          <p>Sea Food</p>
+        </div>
+        <div class="text-center" style="width: 65px;">
+          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: grey; margin-bottom: 8px;">
+          </div>
+          <p>Fast Food</p>
+        </div>
+        <div class="text-center" style="width: 65px;">
+          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: grey; margin-bottom: 8px;">
+          </div>
+          <p>Asian</p>
+        </div>
+        <div class="text-center" style="width: 65px;">
+          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: grey; margin-bottom: 8px;">
+          </div>
+          <p>Vegan</p>
+        </div>
+        <div class="text-center" style="width: 65px;">
+          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: grey; margin-bottom: 8px;">
+          </div>
+          <p>Italian</p>
+        </div>
+        <div class="text-center" style="width: 65px;">
+          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: grey; margin-bottom: 8px;">
+          </div>
+          <p>Arabic</p>
+        </div>
+      </div>
+
+      <!-- Greetings -->
+      <div>
+
+      </div>
+    </div>
+
+
+    <!-- Content -->
+    <div style="width: 100%; display: flex; flex-direction: row; gap: 40px;">
+
+      <!-- Recipes -->
+      <div style="width: 50%; display: flex; flex-direction: column; height: 73vh;">
+
+        <div style="display: flex; justify-content: space-between; align-items: end;">
+          <h2 style="margin: 0; font-weight: 500;">Rezepte</h2>
+          <p class="text-accent" style="font-size: 16px;">Alle ansehen</p>
+        </div>
+
+        <q-scroll-area
+          :thumb-style="thumbStyle"
+          :bar-style="barStyle"
+          style="max-width: 100%; height: 100%;"
+        >
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; width: 100%; margin-top: 16px;">
+            <!-- Cards -->
+            <div v-for="recipe in recipes" style="width: 49%;">
+              <div style="height: 100%; width: 100%; border-radius: 20px; background-color: grey;">
+                <q-img src="../../public/gordon_ramsay.jpeg" spinner-color="white"
+                  style="object-fit: cover; border-radius: 20px; height: 180px;"></q-img>
+
+                <div style="height: 100px; padding: 6px 12px;">
+                  <p style="font-weight: 700; font-size: 16px;">{{ recipe["titel"] }}</p>
+                  <p style="margin-top: 12px;">Dauer: {{ recipe["dauer"] }} min</p>
+
+                  <div style="display: flex; justify-content: space-between;">
+                    <p>Preis: {{ recipe["preis"] }}€</p>
+                    <p style="font-size: 12px;">{{ recipe["profile"]["vorname"] }} {{
+                      recipe["profile"]["nachname"].charAt(0) }}.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </q-scroll-area>
+      </div>
+
+      <!-- Search Btn &  Create -->
+      <div style="width: 50%; display: flex; flex-direction:column; gap: 2%;" class="flex flex-center">
+
+        <!-- Search Btn -->
+        <q-input rounded filled label="Suchen..." @keydown.enter.prevent="getFiltered()" @update:model-value="getFiltered()" v-model="searchInput.info" 
+        style="width: 100%; text-decoration: none;"> 
+          <template v-slot:append>
+                      <q-icon @click="getFiltered()" name="search" style="cursor: pointer"></q-icon>
+          </template>
+        </q-input>
+
+        <!-- Create -->
+        <div class="text-center flex flex-center" style="border-radius: 28px; background-color: black; height: 260px; width: 100%">
+          <h2 style="color: white;">Rezept Erstellen</h2>
+        </div>
+      </div>
+    </div>
+
+    <!-- Festes div mit h3 Überschrift
     <div style="position: fixed; top: 50px; left: 80px; min-width: 150px; max-width: 250px; padding: 0; margin: 0; z-index: 100;">
       <h3>Hallo {{ name }}</h3>
     </div>
 
-    <!-- Content-Seite in der Mitte mit den Rezepten -->
+    Content-Seite in der Mitte mit den Rezepten
     <div style="margin: 0; padding: 0; min-width: 110vh; max-width: 110vh; margin-top: 20px;" >
       <div class="flex flex-center">
         <q-pagination
@@ -46,21 +147,21 @@
           <h2>Es wurde leider kein Rezept gefunden :(</h2>
         </div>
       </div>
-    </div>
-
+    </div> -->
 
     <!-- Festes div für den Rezept erstellen Button -->
-    <div style="position: fixed; top: 50px; right: 80px; min-width: 150px; max-width: 250px; padding: 0; margin: 0; z-index: 100;">
+    <!-- <div style="position: fixed; top: 50px; right: 80px; min-width: 150px; max-width: 250px; padding: 0; margin: 0; z-index: 100;">
 
       <q-btn class="rightContents" color="primary" label="Rezept erstellen" @click="window_CreateRecipe = true"/>
 
       <q-input class="rightContents" label="Suchen..." @keydown.enter.prevent="getFiltered()" @update:model-value="getFiltered()" v-model="searchInput.info" style="margin-top: 30px;"> <template v-slot:append>
                       <q-icon @click="getFiltered()" name="search" style="cursor: pointer"></q-icon>
         </template>
-      </q-input>
+</q-input>
 
-      <q-select class="rightContents" v-model="amountPerPage" :options="pageAmountOptions" label="Anzahl Rezepte pro Seite" @update:model-value="calculateMaxAmountPage(), calculateOffset()"/>
-    </div>
+<q-select class="rightContents" v-model="amountPerPage" :options="pageAmountOptions" label="Anzahl Rezepte pro Seite"
+  @update:model-value="calculateMaxAmountPage(), calculateOffset()" />
+</div> -->
 
     <!-- Dialog für das Erstellen von Rezepten -->
     <q-dialog v-model="window_CreateRecipe" persistent transition-show="scale" transition-hide="scale">
@@ -72,37 +173,31 @@
           <q-input dense v-model="create_recipe.titel" autofocus label='Titel'></q-input>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <q-input dense v-model="create_recipe.zutaten" autofocus hint="Geben Sie die Zutaten bitte getrennt mit Komma an und die Menge in Klammern hinter dieser Zutat" label="Zutaten"></q-input>
+          <q-input dense v-model="create_recipe.zutaten" autofocus
+            hint="Geben Sie die Zutaten bitte getrennt mit Komma an und die Menge in Klammern hinter dieser Zutat"
+            label="Zutaten"></q-input>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <q-input dense v-model="create_recipe.zubereitung" autofocus hint="Sie können einen einfachen Fließtext schreiben" label='Zubereitung'></q-input>
+          <q-input dense v-model="create_recipe.zubereitung" autofocus
+            hint="Sie können einen einfachen Fließtext schreiben" label='Zubereitung'></q-input>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <q-input dense v-model="create_recipe.preis" autofocus mask="##.##" hint="Bsp.: 09.99€" label='Preis'></q-input>
+          <q-input dense v-model="create_recipe.preis" autofocus mask="##.##" hint="Bsp.: 09.99€"
+            label='Preis'></q-input>
         </q-card-section>
         <q-card-section class="q-pt-none">
           <q-input dense v-model="create_recipe.dauer" autofocus mask="##.##" hint="MM.SS" label='Dauer'></q-input>
         </q-card-section>
         <q-card-section class="q-pt-none">
-          <q-file
-            v-model="img"
-            outlined
-            accept=".jpg, image/*"
-            @update:model-value="handleIMG(img)"
-            style="max-width: 375px; min-width: 375px;"
-            label="Laden Sie ein Bild hoch:"
-          />
-        <q-card-section class="q-pt-none" v-if="appImage">
-          <q-img
-            v-if="showImg"
-            :src="showImg"
-            style="margin-top: 10px;"
-          />
-        </q-card-section>
+          <q-file v-model="img" outlined accept=".jpg, image/*" @update:model-value="handleIMG(img)"
+            style="max-width: 375px; min-width: 375px;" label="Laden Sie ein Bild hoch:" />
+          <q-card-section class="q-pt-none" v-if="appImage">
+            <q-img v-if="showImg" :src="showImg" style="margin-top: 10px;" />
+          </q-card-section>
         </q-card-section>
         <q-card-actions style="display: flex; justify-content: space-between;">
-          <q-btn flat label='Schließen' v-close-popup ></q-btn>
-          <q-btn flat label='Erstellen' v-close-popup @click="createRecipe()" ></q-btn>
+          <q-btn flat label='Schließen' v-close-popup></q-btn>
+          <q-btn flat label='Erstellen' v-close-popup @click="createRecipe()"></q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -140,7 +235,7 @@ export default defineComponent({
     const img = ref(null)
     const showImg = ref(null)
     const window_CreateRecipe = ref(false)
-    const searchInput = ref({info: ""})
+    const searchInput = ref({ info: "" })
     const amountPerPage = ref(10)
     const offset = ref(0)
     const currentPage = ref(1)
@@ -148,14 +243,14 @@ export default defineComponent({
     const dbcounter = ref(0)
     const pageAmount = ref(1)
     const pageAmountOptions = [4, 6, 8, 10]
-    
+
     onMounted(() => {
       name.value = token["vorname"]
       cur_id.value = token["id"]
-      try{
+      try {
         getFiltered()
-        
-      } catch(err) {
+
+      } catch (err) {
         $q.notify({
           type: 'negative',
           message: 'Es gibt Probleme mit dem Backend!',
@@ -178,7 +273,7 @@ export default defineComponent({
       try {
         create_recipe.value.id = token["id"]
         console.log(create_recipe.value)
-        if(Object.values(create_recipe.value).every(field => field !== '')){
+        if (Object.values(create_recipe.value).every(field => field !== '')) {
           // await api.post('/createRecipe', create_recipe.value, {headers: {Authorization: localStorage.getItem("token")}})
           console.log(create_recipe.value.bild)
           await getFiltered()
@@ -192,7 +287,7 @@ export default defineComponent({
             id: "",
             bild: ""
           }
-  
+
           $q.notify({
             type: 'positive',
             message: 'Ihr Rezept wurde erfolgreich erstellt!',
@@ -223,11 +318,11 @@ export default defineComponent({
       await getFiltered()
     }
 
-    function calculateMaxAmountPage(){
+    function calculateMaxAmountPage() {
       pageAmount.value = Math.ceil(dbcounter.value / amountPerPage.value)
     }
 
-    function checkForEmptyValue(){
+    function checkForEmptyValue() {
       return recipes.value == 0
     }
 
@@ -248,7 +343,7 @@ export default defineComponent({
 
     function arrayData(arr) {
       let chars = ""
-      for(const byte of arr){
+      for (const byte of arr) {
         chars += String.fromCharCode(byte)
       }
       appImage.value = btoa(chars)
@@ -261,11 +356,11 @@ export default defineComponent({
     }
 
     async function getFiltered() {
-      const temp = (await api.post(`getFilteredRecipes/?limit=${amountPerPage.value}&offset=${offset.value}`, searchInput.value, {headers: {Authorization: localStorage.getItem("token")}})).data
+      const temp = (await api.post(`getFilteredRecipes/?limit=${amountPerPage.value}&offset=${offset.value}`, searchInput.value, { headers: { Authorization: localStorage.getItem("token") } })).data
       recipes.value = sortById(temp.data)
       dbcounter.value = temp.count
       calculateMaxAmountPage()
-      if(checkForEmptyValue()) {
+      if (checkForEmptyValue()) {
         pageAmount.value = 1
       }
     }
@@ -292,19 +387,33 @@ export default defineComponent({
       calculateOffset,
       calculateMaxAmountPage,
       goToRecipePage,
-      handleIMG
+      handleIMG,
+      thumbStyle: {
+        right: '4px',
+        borderRadius: '5px',
+        backgroundColor: '#027be3',
+        width: '5px',
+        opacity: 0.75
+      },
+
+      barStyle: {
+        right: '2px',
+        borderRadius: '9px',
+        backgroundColor: '#027be3',
+        width: '9px',
+        opacity: 0.2
+      }
     }
   }
 });
 </script>
 
 
-<style>
-
+<style scoped>
 .RecContent {
-  display: flex; 
-  justify-content: space-between; 
-  margin: 30px; 
+  display: flex;
+  justify-content: space-between;
+  margin: 30px;
   min-height: 320px;
   max-height: 320px;
   border: 3px solid white;
@@ -312,15 +421,19 @@ export default defineComponent({
   background-color: rgb(27, 27, 27);
 }
 
-.RecContent:hover{
+.RecContent:hover {
   cursor: pointer;
 }
 
 .rightContents {
   min-width: 200px;
   max-width: 200px;
-  margin-top: 50px;;
+  margin-top: 50px;
   margin-right: 180px;
+}
+
+p {
+  margin: 0px;
 }
 
 </style>

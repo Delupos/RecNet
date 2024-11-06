@@ -181,7 +181,7 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
 .q-page {
     display: flex;
     justify-content: center;

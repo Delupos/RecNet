@@ -74,7 +74,7 @@ export default defineComponent({
 })
 </script>
 
-<style>
+<style scoped>
 .gridtitle {
     margin-top: -200px;
     display: flex;

@@ -7,7 +7,7 @@
           {{ title }}
         </q-toolbar-title>
 
-        <q-btn-dropdown v-if="verOrBtn" color="blue" :label="fullLoginName">
+        <q-btn-dropdown v-if="verOrBtn" :label="fullLoginName">
           
           <q-list>
             
@@ -53,7 +53,7 @@ export default defineComponent({
     const fullLoginName = ref("")
 
     onMounted(() => {
-      $q.dark.set(true)
+      $q.dark.set(false)
       versionOrButton(router.currentRoute.value.fullPath)
       setFullLoginName()
     })
@@ -80,7 +80,7 @@ export default defineComponent({
       }
       // console.log(token.value)
       if(token){
-        fullLoginName.value = token.value["vorname"] + " " + token.value["nachname"]
+        fullLoginName.value = token.value["vorname"] + " " + token.value["nachname"].slice(0,1) + "."
       }
     }
 
