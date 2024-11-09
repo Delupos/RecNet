@@ -27,9 +27,9 @@ const recipes = db.define('recipes',
         type: sequelize.STRING,
         allowNull: false
     },
-    bild: {
-        type: sequelize.BLOB,
-        allowNull: true
+    kategorie: {
+        type: sequelize.STRING,
+        allowNull: true        
     },
     id: {
         type: sequelize.INTEGER, 

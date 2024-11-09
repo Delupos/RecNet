@@ -193,7 +193,7 @@ app.post('/createRecipe', async(req, res) => {
             preis: req.body.preis,
             dauer: req.body.dauer,
             id: req.body.id,
-            bild: req.body.bild
+            kategorie: req.body.kategorie
         }
 
         await recipes.create(temp_recipe)
@@ -254,6 +254,12 @@ app.post('/getFilteredRecipes', async(req, res) => {
                         {
                             [Op.substring]: req.body.info
                         }
+                    },
+                    {
+                        kategorie:
+                        {
+                            [Op.substring]: req.body.info
+                        }
                     }
                 ]
             },
@@ -282,6 +288,44 @@ app.get('/getRecipeById/:id', async(req, res) => {
             where: {
                 "recId": req.params.id,
             }
+        })
+
+        res.status(200).json({
+            success: true,
+            data: result
+        })
+
+    } catch(err) {
+        res.status(500).json({
+            succces: false,
+            error: err
+        })
+    }
+})
+
+app.post('/getRecipeByCategorie', async(req, res) => {
+    try{
+
+        const result = await recipes.findAll({
+            include: [{
+                model: profile,
+                on: {
+                    col1: Sequelize.where(Sequelize.col('recipes.id'), '=', Sequelize.col('profile.id'))
+                }
+            }],
+            order: [
+                ["id", "DESC"]
+            ],
+            where: {
+                [Op.or] : [
+                    {
+                        kategorie:
+                        {
+                            [Op.substring]: req.body.kategorie
+                        }
+                    }
+                ]
+            },
         })
 
         res.status(200).json({

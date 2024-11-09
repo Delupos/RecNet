@@ -92,7 +92,7 @@ export default defineComponent({
                         
                         var message = "" 
                         if (err.status == 400) {
-                            message = "Invalid E-Mail"
+                            message = "Invalide E-Mail!"
                         } else {
                             message = "Unbekannter Fehler! " + err.name
                         }
@@ -102,13 +102,21 @@ export default defineComponent({
                             timeout: 2000
                         })
                     }
-
-                $q.notify({
-                        type: 'negative',
-                        message: 'Vor- und Nachname dürfen nicht identisch sein',
-                        timeout: 2000
-                    })
-                } 
+                } else {
+                    if (create_vorname.value == create_nachname.value) {
+                        $q.notify({
+                            type: 'negative',
+                            message: 'Vor- und Nachname dürfen nicht identisch sein!',
+                            timeout: 2000
+                        })
+                        } else {
+                        $q.notify({
+                            type: 'negative',
+                            message: 'Namen sind zu lang!',
+                            timeout: 2000
+                        })
+                        } 
+                    }
 
             } else {
                 $q.notify({
@@ -215,6 +223,7 @@ div[v-if] {
 .loginPageBtn {
     display: block;
     width: 100%;
+    min-width: 350px;
     margin-bottom: 15px;
     font-size: 16px;
     padding: 12px;

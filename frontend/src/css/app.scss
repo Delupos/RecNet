@@ -1,11 +1,23 @@
 // app global css in SCSS form
 
 .q-field--filled {
-    border-radius: 32px !important;
-  }
-  .q-field--rounded {
-    border-radius: 32px !important;
-  }
-  .q-field__control {
-    border-radius: 32px !important;
-  }
+  border-radius: 32px !important;
+}
+.q-field--rounded {
+  border-radius: 32px !important;
+}
+.q-field__control {
+  border-radius: 32px !important;
+}
+.q-field--focused {
+  border-bottom: none !important;
+}
+.q-field__native::before {
+  border-bottom: none !important;
+}
+.q-input.q-filled-highlighted {
+  border-bottom: none !important;
+}
+.q-field__control::after {
+  border-bottom: none !important;
+}

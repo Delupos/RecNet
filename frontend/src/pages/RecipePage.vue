@@ -16,7 +16,7 @@
             
             <div class="image">
                 <q-img
-                src="https://cdn.quasar.dev/img/parallax2.jpg"
+                src="../../public/gordon_ramsay.jpeg"
                 spinner-color="white"
                 style="width: 500px;"
                 ></q-img>
@@ -62,7 +62,6 @@ export default defineComponent({
         function goToIndexPage(){
             router.push('../')
         }
-
 
         return {
             title,

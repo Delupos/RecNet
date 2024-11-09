@@ -1,46 +1,53 @@
 <template>
-  <q-page style="padding-left: 172px; padding-right: 172px; display: flex; flex-direction: column; gap: 40px; overflow-y: hidden;">
+  <q-page
+    style="padding-left: 172px; padding-right: 172px; display: flex; flex-direction: column; gap: 40px; overflow-y: hidden;">
 
     <!-- Type of Recipe Btns -->
-    <div class="w-full q-flex q-flex-row" style="padding-top: 75px;">
+    <div class="w-full" style="padding-top: 75px; width: 100%; display: flex; flex-direction: row; flex-wrap: wrap;">
 
       <!-- Types -->
-      <div style="display: flex; flex-direction: row; justify-content: space-between; width: 50%; ">
+      <div style="display: flex; flex-direction: row; justify-content: space-between; width: 48%;">
         <div class="text-center" style="width: 65px;">
-          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px;">
+          <div @click="getDataByCat('Sea Food')" style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px; cursor: pointer;">
+            <q-icon name="set_meal" style="width: 100%; height: 100%; font-size: 48px;"></q-icon>
           </div>
           <p>Sea Food</p>
         </div>
         <div class="text-center" style="width: 65px;">
-          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px;">
+          <div @click="getDataByCat('Fast Food')" style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px; cursor: pointer;">
+            <q-icon name="fastfood" style="width: 100%; height: 100%; font-size: 48px;"></q-icon>
           </div>
           <p>Fast Food</p>
         </div>
         <div class="text-center" style="width: 65px;">
-          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px;">
+          <div @click="getDataByCat('Asian')" style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px; cursor: pointer;">
+            <q-icon name="ramen_dining" style="width: 100%; height: 100%; font-size: 48px;"></q-icon>
           </div>
           <p>Asian</p>
         </div>
         <div class="text-center" style="width: 65px;">
-          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px;">
+          <div @click="getDataByCat('Vegan')" style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px; cursor: pointer;">
+            <q-icon name="grass" style="width: 100%; height: 100%; font-size: 48px;"></q-icon>
           </div>
           <p>Vegan</p>
         </div>
         <div class="text-center" style="width: 65px;">
-          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px;">
+          <div @click="getDataByCat('Italian')" style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px; cursor: pointer;">
+            <q-icon name="local_pizza" style="width: 100%; height: 100%; font-size: 48px;"></q-icon>
           </div>
           <p>Italian</p>
         </div>
         <div class="text-center" style="width: 65px;">
-          <div style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px;">
+          <div @click="getDataByCat('Sweet')" style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px; cursor: pointer;">
+            <q-icon name="cake" style="width: 100%; height: 100%; font-size: 48px;"></q-icon>
           </div>
-          <p>Arabic</p>
+          <p>Sweet</p>
         </div>
       </div>
 
       <!-- Greetings -->
-      <div>
-
+      <div style="width: 50%; display: flex; justify-content: center;">
+        <h3 style="margin: 0px; padding-top: 12px;">Hallo <a style="color: orange;">{{ name }}</a></h3>
       </div>
     </div>
 
@@ -53,18 +60,17 @@
 
         <div style="display: flex; justify-content: space-between; align-items: end;">
           <h2 style="margin: 0; font-weight: 500;">Rezepte</h2>
-          <p class="text-accent" style="font-size: 16px;">Alle ansehen</p>
+          <div @click="getFiltered()" style="cursor: pointer;">
+            <p class="text-accent" style="font-size: 16px;">Alle ansehen</p>
+          </div>
         </div>
 
-        <q-scroll-area
-          :thumb-style="thumbStyle"
-          :bar-style="barStyle"
-          style="max-width: 100%; height: 100%;"
-        >
+        <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle" style="max-width: 100%; height: 100%;">
           <div style="display: flex; flex-wrap: wrap; gap: 12px; width: 100%; margin-top: 16px;">
             <!-- Cards -->
             <div v-for="recipe in recipes" style="width: 49%;">
-              <div style="height: 100%; width: 100%; border-radius: 20px; background-color: #D9D9D9;">
+              <div @click="goToRecipePage(recipe['recId'])"
+                style="height: 100%; width: 100%; border-radius: 20px; background-color: #D9D9D9; cursor: pointer;">
                 <q-img src="../../public/gordon_ramsay.jpeg" spinner-color="white"
                   style="object-fit: cover; border-radius: 20px; height: 180px;"></q-img>
 
@@ -88,19 +94,64 @@
       <div style="width: 50%; display: flex; flex-direction:column; gap: 2%;" class="flex flex-center">
 
         <!-- Search Btn -->
-        <q-input rounded filled label="Suchen..." @keydown.enter.prevent="getFiltered()" @update:model-value="getFiltered()" v-model="searchInput.info" 
-        style="width: 100%; text-decoration: none;"> 
+        <q-input rounded filled label="Suchen..." @keydown.enter.prevent="getFiltered()"
+          @update:model-value="getFiltered()" v-model="searchInput.info" style="width: 100%; text-decoration: none;">
           <template v-slot:append>
-                      <q-icon @click="getFiltered()" name="search" style="cursor: pointer"></q-icon>
+            <q-icon @click="getFiltered()" name="search" style="cursor: pointer"></q-icon>
           </template>
         </q-input>
 
         <!-- Create -->
-        <div class="text-center flex flex-center" style="border-radius: 28px; background-color: black; height: 260px; width: 100%">
+        <div @click="window_CreateRecipe = true" class="text-center flex flex-center"
+          style="border-radius: 28px; background-color: black; height: 260px; width: 100%; cursor: pointer;">
           <h2 style="color: white;">Rezept Erstellen</h2>
         </div>
       </div>
     </div>
+
+    <!-- Dialog für das Erstellen von Rezepten -->
+    <q-dialog v-model="window_CreateRecipe" persistent transition-show="scale" transition-hide="scale">
+      <q-card style="min-width: 400px; max-height: 1000px;">
+        <q-card-section style="min-height: 100px; max-height: 100px; margin-top: -30px; margin-bottom: 20px;">
+          <h6>Erstelle ein Rezept</h6>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-input rounded filled dense v-model="create_recipe.titel" autofocus label='Titel'></q-input>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-input rounded filled dense v-model="create_recipe.zutaten" autofocus
+            hint="Geben Sie die Zutaten bitte getrennt mit Komma an und die Menge in Klammern hinter dieser Zutat"
+            label="Zutaten"></q-input>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-input rounded filled dense v-model="create_recipe.zubereitung" autofocus
+            hint="Sie können einen einfachen Fließtext schreiben" label='Zubereitung'></q-input>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-input rounded filled dense v-model="create_recipe.preis" autofocus mask="##.##" hint="Bsp.: 09.99€"
+            label='Preis'></q-input>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-input rounded filled dense v-model="create_recipe.dauer" autofocus mask="##.##" hint="MM.SS" label='Dauer'></q-input>
+        </q-card-section>
+        <q-card-section class="q-pt-none">
+          <q-select rounded filled dense v-model="create_recipe.kategorie" :options="categoriesForFood" autofocus label='Kategorie'></q-select>
+        </q-card-section>
+        <!-- <q-card-section class="q-pt-none">
+          <q-file v-model="img" outlined accept=".jpg, image/*" @update:model-value="handleIMG(img)"
+            style="max-width: 375px; min-width: 375px;" label="Laden Sie ein Bild hoch:" />
+          <q-card-section class="q-pt-none" v-if="appImage">
+            <q-img v-if="showImg" :src="showImg" style="margin-top: 10px;" />
+          </q-card-section>
+        </q-card-section> -->
+        <q-card-actions style="display: flex; justify-content: space-between;">
+          <q-btn flat label='Schließen' v-close-popup></q-btn>
+          <q-btn flat label='Erstellen' v-close-popup @click="createRecipe()"></q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+
 
     <!-- Festes div mit h3 Überschrift
     <div style="position: fixed; top: 50px; left: 80px; min-width: 150px; max-width: 250px; padding: 0; margin: 0; z-index: 100;">
@@ -163,44 +214,6 @@
   @update:model-value="calculateMaxAmountPage(), calculateOffset()" />
 </div> -->
 
-    <!-- Dialog für das Erstellen von Rezepten -->
-    <q-dialog v-model="window_CreateRecipe" persistent transition-show="scale" transition-hide="scale">
-      <q-card style="min-width: 400px; max-height: 1000px;">
-        <q-card-section style="min-height: 100px; max-height: 100px; margin-top: -30px; margin-bottom: 20px;">
-          <h6>Erstelle ein Rezept</h6>
-        </q-card-section>
-        <q-card-section class="q-pt-none">
-          <q-input dense v-model="create_recipe.titel" autofocus label='Titel'></q-input>
-        </q-card-section>
-        <q-card-section class="q-pt-none">
-          <q-input dense v-model="create_recipe.zutaten" autofocus
-            hint="Geben Sie die Zutaten bitte getrennt mit Komma an und die Menge in Klammern hinter dieser Zutat"
-            label="Zutaten"></q-input>
-        </q-card-section>
-        <q-card-section class="q-pt-none">
-          <q-input dense v-model="create_recipe.zubereitung" autofocus
-            hint="Sie können einen einfachen Fließtext schreiben" label='Zubereitung'></q-input>
-        </q-card-section>
-        <q-card-section class="q-pt-none">
-          <q-input dense v-model="create_recipe.preis" autofocus mask="##.##" hint="Bsp.: 09.99€"
-            label='Preis'></q-input>
-        </q-card-section>
-        <q-card-section class="q-pt-none">
-          <q-input dense v-model="create_recipe.dauer" autofocus mask="##.##" hint="MM.SS" label='Dauer'></q-input>
-        </q-card-section>
-        <q-card-section class="q-pt-none">
-          <q-file v-model="img" outlined accept=".jpg, image/*" @update:model-value="handleIMG(img)"
-            style="max-width: 375px; min-width: 375px;" label="Laden Sie ein Bild hoch:" />
-          <q-card-section class="q-pt-none" v-if="appImage">
-            <q-img v-if="showImg" :src="showImg" style="margin-top: 10px;" />
-          </q-card-section>
-        </q-card-section>
-        <q-card-actions style="display: flex; justify-content: space-between;">
-          <q-btn flat label='Schließen' v-close-popup></q-btn>
-          <q-btn flat label='Erstellen' v-close-popup @click="createRecipe()"></q-btn>
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
 
   </q-page>
 </template>
@@ -228,9 +241,10 @@ export default defineComponent({
       zubereitung: "",
       preis: "",
       dauer: "",
-      id: "",
-      bild: ""
+      id: "",    
+      kategorie: "",
     })
+    const categoriesForFood = ref(["Sea Food", "Fast Food", "Asian", "Vegan", "Italian", "Sweet"])
     const appImage = ref(null)
     const img = ref(null)
     const showImg = ref(null)
@@ -274,8 +288,7 @@ export default defineComponent({
         create_recipe.value.id = token["id"]
         console.log(create_recipe.value)
         if (Object.values(create_recipe.value).every(field => field !== '')) {
-          // await api.post('/createRecipe', create_recipe.value, {headers: {Authorization: localStorage.getItem("token")}})
-          console.log(create_recipe.value.bild)
+          await api.post('/createRecipe', create_recipe.value, {headers: {Authorization: localStorage.getItem("token")}})
           await getFiltered()
           calculateOffset()
           create_recipe.value = {
@@ -285,7 +298,7 @@ export default defineComponent({
             preis: "",
             dauer: "",
             id: "",
-            bild: ""
+            kategorie: "",
           }
 
           $q.notify({
@@ -355,8 +368,18 @@ export default defineComponent({
       // console.log(id)
     }
 
+    async function getDataByCat(cat) {
+      const temp = (await api.post(`/getRecipeByCategorie`, {kategorie: cat}, { headers: { Authorization: localStorage.getItem("token") } })).data
+      recipes.value = temp.data
+      dbcounter.value = temp.count
+      calculateMaxAmountPage()
+      if (checkForEmptyValue()) {
+        pageAmount.value = 1
+      }
+    }
+
     async function getFiltered() {
-      const temp = (await api.post(`getFilteredRecipes/?limit=${amountPerPage.value}&offset=${offset.value}`, searchInput.value, { headers: { Authorization: localStorage.getItem("token") } })).data
+      const temp = (await api.post(`/getFilteredRecipes/?limit=${amountPerPage.value}&offset=${offset.value}`, searchInput.value, { headers: { Authorization: localStorage.getItem("token") } })).data
       recipes.value = sortById(temp.data)
       dbcounter.value = temp.count
       calculateMaxAmountPage()
@@ -382,12 +405,14 @@ export default defineComponent({
       appImage,
       img,
       showImg,
+      categoriesForFood,
       createRecipe,
       getFiltered,
       calculateOffset,
       calculateMaxAmountPage,
       goToRecipePage,
       handleIMG,
+      getDataByCat,
       thumbStyle: {
         right: '4px',
         borderRadius: '5px',
@@ -395,7 +420,6 @@ export default defineComponent({
         width: '5px',
         opacity: 0.75
       },
-
       barStyle: {
         right: '2px',
         borderRadius: '9px',
