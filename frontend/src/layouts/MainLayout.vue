@@ -11,11 +11,18 @@
           
           <q-list>
             
+            <q-item clickable v-close-popup @click="showImpressum = true">
+              <q-item-section>
+                <q-item-label>Impressum</q-item-label>
+              </q-item-section>
+            </q-item>
+
             <q-item clickable v-close-popup @click="logout()">
               <q-item-section>
                 <q-item-label>Logout</q-item-label>
               </q-item-section>
             </q-item>
+
           </q-list>
         
         </q-btn-dropdown>
@@ -27,6 +34,30 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+
+
+    <!-- Dialog for Impressum -->
+    <q-dialog v-model="showImpressum" persistent transition-show="scale" transition-hide="scale">
+      <q-card style="min-width: 400px; max-height: 1000px;">
+        <q-card-section style="min-height: 100px; max-height: 100px; margin-top: -30px; margin-bottom: 20px;">
+          <h6>Impressum</h6>
+        </q-card-section>
+
+        <q-card-section>
+          <p>Timm Kalesse</p>
+          <p>Muster Straße</p>
+          <p>12345 Musterhausen</p>
+          <h6 style="margin-top: 25px; margin-bottom: 20px;">Kontakt:</h6>
+          <p>Telefon: 0152 318.....</p>
+          <p>E-Mail: timm-kalesse@mustermail.de</p>
+        </q-card-section>
+
+        <q-card-actions style="display: flex; justify-content: right;">
+          <q-btn flat label='Schließen' v-close-popup></q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
   </q-layout>
 </template>
 
@@ -51,6 +82,7 @@ export default defineComponent({
     const router = useRouter()
     const token = ref("")
     const fullLoginName = ref("")
+    const showImpressum = ref(false)
 
     onMounted(() => {
       $q.dark.set(false)
@@ -98,6 +130,7 @@ export default defineComponent({
       version,
       verOrBtn,
       fullLoginName,
+      showImpressum,
       logout,
       goToIndexPage
     }
