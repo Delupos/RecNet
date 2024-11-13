@@ -48,8 +48,12 @@
           <p>Muster Straße</p>
           <p>12345 Musterhausen</p>
           <h6 style="margin-top: 25px; margin-bottom: 20px;">Kontakt:</h6>
-          <p>Telefon: 0152 318.....</p>
+          <p>Telefon: 0123 12345678</p>
           <p>E-Mail: timm-kalesse@mustermail.de</p>
+          <h6 style="margin-top: 25px; margin-bottom: 20px;">Verwendetes Image:</h6>
+          <p>https://www.pressreader.com/switzerland/20-minuten-deutschschweiz-uberregional/20191206/281951724689391
+            [Letzter Zugriff: 13.11.2024]
+          </p>
         </q-card-section>
 
         <q-card-actions style="display: flex; justify-content: right;">

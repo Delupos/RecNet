@@ -67,6 +67,7 @@
 
         <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle" style="max-width: 100%; height: 100%;">
           <div style="display: flex; flex-wrap: wrap; gap: 12px; width: 100%; margin-top: 16px;">
+            
             <!-- Cards -->
             <div v-for="recipe in recipes" style="width: 49%;">
               <div @click="goToRecipePage(recipe['recId'])"
