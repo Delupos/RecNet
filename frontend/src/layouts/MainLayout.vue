@@ -40,7 +40,7 @@
     <q-dialog v-model="showImpressum" persistent transition-show="scale" transition-hide="scale">
       <q-card style="min-width: 400px; max-height: 1000px;">
         <q-card-section style="min-height: 100px; max-height: 100px; margin-top: -30px; margin-bottom: 20px;">
-          <h6>Impressum</h6>
+          <h4 style="font-weight: bold;">Impressum:</h4>
         </q-card-section>
 
         <q-card-section>
