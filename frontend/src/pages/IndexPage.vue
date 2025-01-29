@@ -7,42 +7,17 @@
 
       <!-- Types -->
       <div style="display: flex; flex-direction: row; justify-content: space-between; width: 48%;">
-        <div class="text-center" style="width: 65px;">
-          <div @click="getDataByCat('Sea Food')" style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px; cursor: pointer;">
-            <q-icon name="set_meal" style="width: 100%; height: 100%; font-size: 48px;"></q-icon>
-          </div>
-          <p>Sea Food</p>
-        </div>
-        <div class="text-center" style="width: 65px;">
-          <div @click="getDataByCat('Fast Food')" style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px; cursor: pointer;">
-            <q-icon name="fastfood" style="width: 100%; height: 100%; font-size: 48px;"></q-icon>
-          </div>
-          <p>Fast Food</p>
-        </div>
-        <div class="text-center" style="width: 65px;">
-          <div @click="getDataByCat('Asian')" style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px; cursor: pointer;">
-            <q-icon name="ramen_dining" style="width: 100%; height: 100%; font-size: 48px;"></q-icon>
-          </div>
-          <p>Asian</p>
-        </div>
-        <div class="text-center" style="width: 65px;">
-          <div @click="getDataByCat('Vegan')" style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px; cursor: pointer;">
-            <q-icon name="grass" style="width: 100%; height: 100%; font-size: 48px;"></q-icon>
-          </div>
-          <p>Vegan</p>
-        </div>
-        <div class="text-center" style="width: 65px;">
-          <div @click="getDataByCat('Italian')" style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px; cursor: pointer;">
-            <q-icon name="local_pizza" style="width: 100%; height: 100%; font-size: 48px;"></q-icon>
-          </div>
-          <p>Italian</p>
-        </div>
-        <div class="text-center" style="width: 65px;">
-          <div @click="getDataByCat('Sweet')" style="height: 65px; width: 65px; border-radius: 100%; background-color: #D9D9D9; margin-bottom: 8px; cursor: pointer;">
-            <q-icon name="cake" style="width: 100%; height: 100%; font-size: 48px;"></q-icon>
-          </div>
-          <p>Sweet</p>
-        </div>
+        <Categorie title="Sea Food" iconName="set_meal" @click="getDataByCat('Sea Food')"></Categorie>
+        
+        <Categorie title="Fast Food" iconName="fastfood" @click="getDataByCat('Fast Food')"></Categorie>
+
+        <Categorie title="Asian" iconName="ramen_dining" @click="getDataByCat('Asian')"></Categorie>
+
+        <Categorie title="Vegan" iconName="grass" @click="getDataByCat('Vegan')"></Categorie>
+
+        <Categorie title="Italian" iconName="local_pizza" @click="getDataByCat('Italian')"></Categorie>
+
+        <Categorie title="Sweet" iconName="cake" @click="getDataByCat('Sweet')"></Categorie>
       </div>
 
       <!-- Greetings -->
@@ -215,12 +190,14 @@ import { api } from 'src/boot/axios';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
 import Cards from 'src/components/Cards.vue';
+import Categorie from 'src/components/Categorie.vue';
 
 export default defineComponent({
   name: 'IndexPage',
 
   components: {
-    Cards
+    Cards,
+    Categorie,
   },
 
   setup() {
