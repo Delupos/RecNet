@@ -67,26 +67,15 @@
 
         <q-scroll-area :thumb-style="thumbStyle" :bar-style="barStyle" style="max-width: 100%; height: 100%;">
           <div style="display: flex; flex-wrap: wrap; gap: 12px; width: 100%; margin-top: 16px;">
-            
             <!-- Cards -->
-            <div v-for="recipe in recipes" style="width: 49%;">
-              <div @click="goToRecipePage(recipe['recId'])"
-                style="height: 100%; width: 100%; border-radius: 20px; background-color: #D9D9D9; cursor: pointer;">
-                <q-img src="../../public/gordon_ramsay.jpeg" spinner-color="white"
-                  style="object-fit: cover; border-radius: 20px; height: 180px;"></q-img>
-
-                <div style="height: 100px; padding: 6px 12px;">
-                  <p style="font-weight: 700; font-size: 16px;">{{ recipe["titel"] }}</p>
-                  <p style="margin-top: 12px;">Dauer: {{ recipe["dauer"] }} min</p>
-
-                  <div style="display: flex; justify-content: space-between;">
-                    <p>Preis: {{ recipe["preis"] }}€</p>
-                    <p style="font-size: 12px;">{{ recipe["profile"]["vorname"] }} {{
-                      recipe["profile"]["nachname"].charAt(0) }}.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <Cards v-for="recipe in recipes" 
+              :titel="recipe['titel']" 
+              :dauer="recipe['dauer']" 
+              :preis='recipe["preis"]' 
+              :profilnach='recipe["profile"]["nachname"]' 
+              :profilvor='recipe["profile"]["vorname"]'
+              :id='recipe["recId"]'>
+            </Cards>
           </div>
         </q-scroll-area>
       </div>
@@ -225,9 +214,14 @@ import { defineComponent, onMounted, ref, watch } from 'vue';
 import { api } from 'src/boot/axios';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
+import Cards from 'src/components/Cards.vue';
 
 export default defineComponent({
   name: 'IndexPage',
+
+  components: {
+    Cards
+  },
 
   setup() {
     const router = useRouter()
